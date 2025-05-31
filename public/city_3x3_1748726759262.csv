@@ -1,0 +1,10 @@
+x,y,type,walkable,description
+0,0,sidewalk,true,"Sidewalk with a newspaper stand."
+1,0,sidewalk,true,"A quiet sidewalk lined with trees."
+2,0,sidewalk,true,"Sidewalk with a newspaper stand."
+0,1,sidewalk,true,"Sidewalk with a bike rack and a bench."
+1,1,building,false,"A lively coffee shop with people chatting."
+2,1,sidewalk,true,"A quiet sidewalk lined with trees."
+0,2,sidewalk,true,"You are on a busy sidewalk in front of a shop."
+1,2,sidewalk,true,"You are on a busy sidewalk in front of a shop."
+2,2,sidewalk,true,"A quiet sidewalk lined with trees."

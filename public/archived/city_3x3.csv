@@ -1,0 +1,10 @@
+x,y,biome,description
+0,0,"residential","Charming yellow house with a white picket fence and a garden gnome collection."
+0,1,"residential","Sidewalk cracks where grass pushes through, leading to a slightly overgrown flower bed."
+0,2,"civic","Community notice board plastered with colorful flyers about local events and lost pets."
+1,0,"commercial","Small café with outdoor seating, the aroma of freshly brewed coffee wafts through the air."
+1,1,"commercial","Cafe's sidewalk café tables, a newspaper left open to the sports section."
+1,2,"mixed-use","Breezy courtyard with a few small shops, colorful awnings fluttering in the wind."
+2,0,"downtown","Modern office building with large glass windows reflecting the skyline."
+2,1,"downtown","Busy intersection with a taxi stand and pedestrians waiting at a crosswalk."
+2,2,"industrial","Old warehouse with rusted metal siding, a faded mural of a factory scene on the side."
