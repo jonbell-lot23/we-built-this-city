@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "generate": "bun generateCity.ts"
+    "generate": "bun generateCity.ts",
+    "expand": "bun expandCity.ts"
   },
   "dependencies": {
     "dotenv": "^16.5.0",
