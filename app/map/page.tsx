@@ -87,9 +87,34 @@ export default function MapAdventure() {
   return (
     <main className="min-h-screen bg-black text-green-400 font-mono p-4">
       <div className="w-full max-w-2xl mx-auto">
-        <div className="border border-green-400 p-4 mb-4">
+        <div className="border border-green-400 p-4 mb-4 relative">
           <h1 className="text-xl mb-4">{">"} We Built This City</h1>
-          <div className="grid grid-cols-4 gap-2 mb-4">
+          <div className="grid grid-cols-5 gap-2 mb-4">
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(${width}, 2px)`,
+                gridTemplateRows: `repeat(${height}, 2px)`,
+                gap: "1px",
+              }}
+            >
+              {Array.from({ length: width * height }).map((_, i) => {
+                const x = bounds.minX + (i % width);
+                const y = bounds.minY + Math.floor(i / width);
+                const key = `${x},${y}`;
+                const visitedCell = visited.has(key);
+                const isCurrent = x === relX && y === relY;
+                let cls = "w-0.5 h-0.5";
+                if (visitedCell) {
+                  if (isCurrent) {
+                    cls += " bg-green-400";
+                  } else {
+                    cls += " bg-green-400/30";
+                  }
+                }
+                return <div key={key} className={cls} />;
+              })}
+            </div>
             <button
               className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
               onClick={() => move(-1, 0)}
@@ -115,32 +140,10 @@ export default function MapAdventure() {
               [E]
             </button>
           </div>
-          <div className="min-h-[120px] mb-4">
+          <div className="min-h-[120px] mt-4">
             <p className="mb-2">
               {">"} {cell?.description || "You see nothing special."}
             </p>
-          </div>
-          <div
-            className="inline-block border border-green-400"
-            style={{
-              display: "grid",
-              gridTemplateColumns: `repeat(${width}, 12px)`,
-              gridTemplateRows: `repeat(${height}, 12px)`,
-            }}
-          >
-            {Array.from({ length: width * height }).map((_, i) => {
-              const x = bounds.minX + (i % width);
-              const y = bounds.minY + Math.floor(i / width);
-              const key = `${x},${y}`;
-              const visitedCell = visited.has(key);
-              const isCurrent = x === relX && y === relY;
-              let cls = "w-3 h-3";
-              if (visitedCell) {
-                cls += " border border-green-400";
-                if (isCurrent) cls += " bg-green-400";
-              }
-              return <div key={key} className={cls} />;
-            })}
           </div>
         </div>
       </div>
