@@ -2,6 +2,7 @@
 
 import { OpenAI } from "openai";
 import * as dotenv from "dotenv";
+import { generateDescription } from "./generateDescriptions";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -14,6 +15,8 @@ type Cell = {
   biome: string;
   blockId: number;
   description?: string;
+  name?: string;
+  businessType?: string;
 };
 
 const biomeChars: Record<string, string> = {
@@ -133,11 +136,27 @@ async function main() {
             let type: Cell["type"] =
               x === 1 && y === 1 ? "building" : "sidewalk";
             let walkable = type === "sidewalk";
+
             let description: string | undefined = undefined;
+            let name: string | undefined = undefined;
+            let businessType: string | undefined = undefined;
+
             if (useDummyText) {
               const options = dummyDescriptions[type];
               description = options[Math.floor(Math.random() * options.length)];
+            } else {
+              const descResponse = await generateDescription({
+                type,
+                biome,
+                x: gx,
+                y: gy,
+                blockId,
+              });
+              description = descResponse.description;
+              name = descResponse.name;
+              businessType = descResponse.businessType;
             }
+
             grid.push({
               x: gx,
               y: gy,
@@ -146,6 +165,8 @@ async function main() {
               biome,
               blockId,
               description,
+              name,
+              businessType,
             });
           }
         }
@@ -153,7 +174,8 @@ async function main() {
       }
     }
     // Write output
-    const header = "x,y,type,walkable,biome,blockId,description";
+    const header =
+      "x,y,type,walkable,biome,blockId,description,name,businessType";
     const rows = grid.map((c) =>
       [
         c.x,
@@ -163,6 +185,8 @@ async function main() {
         c.biome,
         c.blockId,
         JSON.stringify(c.description || ""),
+        JSON.stringify(c.name || ""),
+        JSON.stringify(c.businessType || ""),
       ].join(",")
     );
     const out = [header, ...rows].join("\n");

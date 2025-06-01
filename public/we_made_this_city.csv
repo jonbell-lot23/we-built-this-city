@@ -1,5 +1,5 @@
 x,y,type,walkable,biome,blockId,description
-0,0,sidewalk,true,waterfront,0,"You are on a busy sidewalk in front of a shop."
+0,0,sidewalk,true,waterfront,0,"You are standing here, a bit confused."
 1,0,sidewalk,true,waterfront,0,"Sidewalk with a newspaper stand."
 2,0,sidewalk,true,waterfront,0,"Sidewalk with a bike rack and a bench."
 0,1,sidewalk,true,waterfront,0,"You are on a busy sidewalk in front of a shop."
