@@ -40,7 +40,7 @@ export default function MapAdventure() {
             setCells(data);
             const size = Math.max(...data.map((c) => Math.max(c.x, c.y))) + 1;
             setGridSize(size);
-            const startCell = data.find((c) => c.walkable);
+            const startCell = data.find((c) => c.x === 1 && c.y === 1);
             if (startCell) {
               setStart({ x: startCell.x, y: startCell.y });
               setPos({ x: startCell.x, y: startCell.y });
@@ -90,6 +90,30 @@ export default function MapAdventure() {
         <div className="border border-green-400 p-4 mb-4 relative">
           <h1 className="text-xl mb-4">{">"} We Built This City</h1>
           <div className="grid grid-cols-5 gap-2 mb-4">
+            <button
+              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
+              onClick={() => move(-1, 0)}
+            >
+              [W]
+            </button>
+            <button
+              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
+              onClick={() => move(0, -1)}
+            >
+              [N]
+            </button>
+            <button
+              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
+              onClick={() => move(0, 1)}
+            >
+              [S]
+            </button>
+            <button
+              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
+              onClick={() => move(1, 0)}
+            >
+              [E]
+            </button>
             <div
               style={{
                 display: "grid",
@@ -115,30 +139,6 @@ export default function MapAdventure() {
                 return <div key={key} className={cls} />;
               })}
             </div>
-            <button
-              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
-              onClick={() => move(-1, 0)}
-            >
-              [W]
-            </button>
-            <button
-              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
-              onClick={() => move(0, -1)}
-            >
-              [N]
-            </button>
-            <button
-              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
-              onClick={() => move(0, 1)}
-            >
-              [S]
-            </button>
-            <button
-              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
-              onClick={() => move(1, 0)}
-            >
-              [E]
-            </button>
           </div>
           <div className="min-h-[120px] mt-4">
             <p className="mb-2">
