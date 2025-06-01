@@ -145,8 +145,8 @@ export default function MapAdventure() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: `repeat(${width}, 2px)`,
-                gridTemplateRows: `repeat(${height}, 2px)`,
+                gridTemplateColumns: `repeat(${width}, 3px)`,
+                gridTemplateRows: `repeat(${height}, 3px)`,
                 gap: "1px",
               }}
             >
@@ -156,7 +156,7 @@ export default function MapAdventure() {
                 const key = `${x},${y}`;
                 const visitedCell = visited.has(key);
                 const isCurrent = x === relX && y === relY;
-                let cls = "w-0.5 h-0.5";
+                let cls = "w-3 h-3";
                 if (visitedCell) {
                   if (isCurrent) {
                     cls += " bg-green-400";
