@@ -184,9 +184,9 @@ async function main() {
         c.walkable,
         c.biome,
         c.blockId,
-        JSON.stringify(c.description || ""),
-        JSON.stringify(c.name || ""),
-        JSON.stringify(c.businessType || ""),
+        c.description ? `"${c.description.replace(/"/g, '""')}"` : '""',
+        c.name ? `"${c.name.replace(/"/g, '""')}"` : '""',
+        c.businessType ? `"${c.businessType.replace(/"/g, '""')}"` : '""',
       ].join(",")
     );
     const out = [header, ...rows].join("\n");

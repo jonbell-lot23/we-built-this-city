@@ -56,6 +56,14 @@ export default function MapAdventure() {
   const getCell = (x: number, y: number) =>
     cells.find((c) => c.x === x && c.y === y);
 
+  const canMove = (dx: number, dy: number) => {
+    const nx = pos.x + dx;
+    const ny = pos.y + dy;
+    if (nx < 0 || ny < 0 || nx >= gridSize || ny >= gridSize) return false;
+    const dest = getCell(nx, ny);
+    return dest && dest.walkable;
+  };
+
   const move = (dx: number, dy: number) => {
     const nx = pos.x + dx;
     const ny = pos.y + dy;
@@ -91,26 +99,46 @@ export default function MapAdventure() {
           <h1 className="text-xl mb-4">{">"} We Built This City</h1>
           <div className="grid grid-cols-5 gap-2 mb-4">
             <button
-              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
+              className={`w-full py-2 border border-green-400 transition-colors ${
+                canMove(-1, 0)
+                  ? "hover:bg-green-400 hover:text-black"
+                  : "opacity-50 cursor-not-allowed"
+              }`}
               onClick={() => move(-1, 0)}
+              disabled={!canMove(-1, 0)}
             >
               [W]
             </button>
             <button
-              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
+              className={`w-full py-2 border border-green-400 transition-colors ${
+                canMove(0, -1)
+                  ? "hover:bg-green-400 hover:text-black"
+                  : "opacity-50 cursor-not-allowed"
+              }`}
               onClick={() => move(0, -1)}
+              disabled={!canMove(0, -1)}
             >
               [N]
             </button>
             <button
-              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
+              className={`w-full py-2 border border-green-400 transition-colors ${
+                canMove(0, 1)
+                  ? "hover:bg-green-400 hover:text-black"
+                  : "opacity-50 cursor-not-allowed"
+              }`}
               onClick={() => move(0, 1)}
+              disabled={!canMove(0, 1)}
             >
               [S]
             </button>
             <button
-              className="w-full py-2 border border-green-400 hover:bg-green-400 hover:text-black transition-colors"
+              className={`w-full py-2 border border-green-400 transition-colors ${
+                canMove(1, 0)
+                  ? "hover:bg-green-400 hover:text-black"
+                  : "opacity-50 cursor-not-allowed"
+              }`}
               onClick={() => move(1, 0)}
+              disabled={!canMove(1, 0)}
             >
               [E]
             </button>

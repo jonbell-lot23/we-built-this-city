@@ -11,6 +11,11 @@ type CityCell = {
   type: string;
 };
 
+// Helper function to clean up escaped quotes in text
+const cleanDescription = (text: string) => {
+  return text.replace(/""/g, '"');
+};
+
 const biomeColors: Record<string, string> = {
   residential: "bg-green-400",
   commercial: "bg-blue-400",
@@ -47,6 +52,7 @@ export default function CityGrid({ filename }: { filename: string }) {
         Papa.parse<CityCell>(text, {
           header: true,
           dynamicTyping: true,
+          escapeChar: '"',
           complete: (results) => {
             setCells(results.data);
             const maxCoord =
@@ -125,7 +131,7 @@ export default function CityGrid({ filename }: { filename: string }) {
                 </span>
               </div>
               <p className="text-gray-700 leading-relaxed text-lg">
-                {hoveredCell.description}
+                {cleanDescription(hoveredCell.description)}
               </p>
             </div>
           )}
