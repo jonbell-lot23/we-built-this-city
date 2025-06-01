@@ -15,18 +15,15 @@ interface Cell {
 
 const FILE = "enhanced_city.csv";
 
+const MAP_SIZE = 15;
+const CELL_SIZE = 2; // px, for 2x2 squares
+
 export default function MapAdventure() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [gridSize, setGridSize] = useState(0);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [start, setStart] = useState<{ x: number; y: number } | null>(null);
   const [visited, setVisited] = useState<Set<string>>(new Set());
-  const [bounds, setBounds] = useState({
-    minX: 0,
-    maxX: 0,
-    minY: 0,
-    maxY: 0,
-  });
 
   useEffect(() => {
     fetch(`/${FILE}`)
@@ -44,8 +41,7 @@ export default function MapAdventure() {
             if (startCell) {
               setStart({ x: startCell.x, y: startCell.y });
               setPos({ x: startCell.x, y: startCell.y });
-              setVisited(new Set(["0,0"]));
-              setBounds({ minX: 0, maxX: 0, minY: 0, maxY: 0 });
+              setVisited(new Set([`${startCell.x},${startCell.y}`]));
             }
           },
         });
@@ -71,26 +67,12 @@ export default function MapAdventure() {
     const dest = getCell(nx, ny);
     if (dest && dest.walkable) {
       setPos({ x: nx, y: ny });
-      if (start) {
-        const rx = nx - start.x;
-        const ry = ny - start.y;
-        setVisited((v) => new Set(v).add(`${rx},${ry}`));
-        setBounds((b) => ({
-          minX: Math.min(b.minX, rx),
-          maxX: Math.max(b.maxX, rx),
-          minY: Math.min(b.minY, ry),
-          maxY: Math.max(b.maxY, ry),
-        }));
-      }
+      setVisited((v) => new Set(v).add(`${nx},${ny}`));
     }
   };
 
   const cell = getCell(pos.x, pos.y);
-
-  const relX = start ? pos.x - start.x : 0;
-  const relY = start ? pos.y - start.y : 0;
-  const width = bounds.maxX - bounds.minX + 1;
-  const height = bounds.maxY - bounds.minY + 1;
+  const half = Math.floor(MAP_SIZE / 2);
 
   return (
     <main className="min-h-screen bg-black text-green-400 font-mono p-4">
@@ -143,28 +125,36 @@ export default function MapAdventure() {
               [E]
             </button>
             <div
+              className="p-0 rounded"
               style={{
                 display: "grid",
-                gridTemplateColumns: `repeat(${width}, 3px)`,
-                gridTemplateRows: `repeat(${height}, 3px)`,
+                gridTemplateColumns: `repeat(${MAP_SIZE}, ${CELL_SIZE}px)`,
+                gridTemplateRows: `repeat(${MAP_SIZE}, ${CELL_SIZE}px)`,
                 gap: "1px",
+                width: `${MAP_SIZE * (CELL_SIZE + 1)}px`,
+                height: `${MAP_SIZE * (CELL_SIZE + 1)}px`,
               }}
             >
-              {Array.from({ length: width * height }).map((_, i) => {
-                const x = bounds.minX + (i % width);
-                const y = bounds.minY + Math.floor(i / width);
-                const key = `${x},${y}`;
-                const visitedCell = visited.has(key);
-                const isCurrent = x === relX && y === relY;
-                let cls = "w-3 h-3";
-                if (visitedCell) {
-                  if (isCurrent) {
-                    cls += " bg-green-400";
-                  } else {
-                    cls += " bg-green-400/30";
-                  }
+              {Array.from({ length: MAP_SIZE * MAP_SIZE }).map((_, i) => {
+                const x = pos.x - half + (i % MAP_SIZE);
+                const y = pos.y - half + Math.floor(i / MAP_SIZE);
+                const isCurrent = x === pos.x && y === pos.y;
+                const isVisited = visited.has(`${x},${y}`);
+                let style: { [key: string]: string | number } = {
+                  width: CELL_SIZE,
+                  height: CELL_SIZE,
+                  background: "#222",
+                };
+                let className = "";
+                if (isCurrent) {
+                  style.background = "#22ff22";
+                  style.border = "1px solid #baffba";
+                } else if (isVisited) {
+                  style.background = "#4ade80"; // solid green
                 }
-                return <div key={key} className={cls} />;
+                return (
+                  <div key={`${x},${y}`} className={className} style={style} />
+                );
               })}
             </div>
           </div>
