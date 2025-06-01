@@ -19,6 +19,14 @@ export default function MapAdventure() {
   const [cells, setCells] = useState<Cell[]>([]);
   const [gridSize, setGridSize] = useState(0);
   const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [start, setStart] = useState<{ x: number; y: number } | null>(null);
+  const [visited, setVisited] = useState<Set<string>>(new Set());
+  const [bounds, setBounds] = useState({
+    minX: 0,
+    maxX: 0,
+    minY: 0,
+    maxY: 0,
+  });
 
   useEffect(() => {
     fetch(`/${FILE}`)
@@ -32,8 +40,13 @@ export default function MapAdventure() {
             setCells(data);
             const size = Math.max(...data.map((c) => Math.max(c.x, c.y))) + 1;
             setGridSize(size);
-            const start = data.find((c) => c.walkable);
-            if (start) setPos({ x: start.x, y: start.y });
+            const startCell = data.find((c) => c.walkable);
+            if (startCell) {
+              setStart({ x: startCell.x, y: startCell.y });
+              setPos({ x: startCell.x, y: startCell.y });
+              setVisited(new Set(["0,0"]));
+              setBounds({ minX: 0, maxX: 0, minY: 0, maxY: 0 });
+            }
           },
         });
       })
@@ -50,10 +63,26 @@ export default function MapAdventure() {
     const dest = getCell(nx, ny);
     if (dest && dest.walkable) {
       setPos({ x: nx, y: ny });
+      if (start) {
+        const rx = nx - start.x;
+        const ry = ny - start.y;
+        setVisited((v) => new Set(v).add(`${rx},${ry}`));
+        setBounds((b) => ({
+          minX: Math.min(b.minX, rx),
+          maxX: Math.max(b.maxX, rx),
+          minY: Math.min(b.minY, ry),
+          maxY: Math.max(b.maxY, ry),
+        }));
+      }
     }
   };
 
   const cell = getCell(pos.x, pos.y);
+
+  const relX = start ? pos.x - start.x : 0;
+  const relY = start ? pos.y - start.y : 0;
+  const width = bounds.maxX - bounds.minX + 1;
+  const height = bounds.maxY - bounds.minY + 1;
 
   return (
     <main className="min-h-screen bg-black text-green-400 font-mono p-4">
@@ -86,10 +115,32 @@ export default function MapAdventure() {
               [E]
             </button>
           </div>
-          <div className="min-h-[120px]">
+          <div className="min-h-[120px] mb-4">
             <p className="mb-2">
               {">"} {cell?.description || "You see nothing special."}
             </p>
+          </div>
+          <div
+            className="inline-block border border-green-400"
+            style={{
+              display: "grid",
+              gridTemplateColumns: `repeat(${width}, 12px)`,
+              gridTemplateRows: `repeat(${height}, 12px)`,
+            }}
+          >
+            {Array.from({ length: width * height }).map((_, i) => {
+              const x = bounds.minX + (i % width);
+              const y = bounds.minY + Math.floor(i / width);
+              const key = `${x},${y}`;
+              const visitedCell = visited.has(key);
+              const isCurrent = x === relX && y === relY;
+              let cls = "w-3 h-3";
+              if (visitedCell) {
+                cls += " border border-green-400";
+                if (isCurrent) cls += " bg-green-400";
+              }
+              return <div key={key} className={cls} />;
+            })}
           </div>
         </div>
       </div>
